@@ -1,0 +1,3 @@
+campfire.bison-altered.ts.net {
+    reverse_proxy /* web:3000
+}
