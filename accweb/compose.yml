@@ -1,0 +1,64 @@
+---
+version: "3"
+networks:
+  proxy-subnet:
+    external: false
+services:
+  caddy:
+    image: caddy:latest
+    restart: unless-stopped
+    container_name: caddy
+    hostname: caddy
+    depends_on:
+      - tailscale
+    networks:
+      - proxy-subnet
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+  tailscale:
+    image: tailscale/tailscale:latest
+    network_mode: host
+    restart: unless-stopped
+    hostname: campfire
+    environment:
+      - TS_AUTHKEY=${TS_AUTHHKEY}
+      - TS_EXTRA_ARGS=--advertise-tags=tag:container
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SERVE_CONFIG=/etc/tailscaled/serve.json
+      - TS_ACCEPT_DNS=true
+      - TS_USERSPACE=false
+    volumes:
+      - ${PWD}/serve.json:/etc/tailscaled/serve.json
+      - tailscale-data:/var/lib/tailscale
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - net_admin
+      - net_raw
+      - sys_module
+  web:
+    image: accweb:latest
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - ${PWD}/data/accweb:/accweb
+      - steam-data:/accserver
+    environment:
+      - ACCWEB_HOST=0.0.0.0:9000
+      - ACCWEB_ENABLE_TLS=false
+      - ACCWEB_ADMIN_PASSWORD=${ACCWEB_ADMIN_PASSWORD}
+      - ACCWEB_MOD_PASSWORD=${ACCWEB_MOD_PASSWORD}
+      - ACCWEB_RO_PASSWORD=${ACCWEB_RO_PASSWORD}
+      - ACCWEB_LOGLEVEL=info
+      - ACCWEB_CORS="*"
+    network_mode: service:tailscale
+    depends_on:
+      - tailscale
+      - caddy
+volumes:
+  tailscale-data:
+    driver: local
+  steam-data:
+    driver: local
