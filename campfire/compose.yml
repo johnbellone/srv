@@ -7,7 +7,6 @@ services:
   caddy:
     image: caddy:latest
     restart: unless-stopped
-    container_name: caddy
     hostname: caddy
     depends_on:
       - tailscale
@@ -41,6 +40,7 @@ services:
   redis:
     image: redis
     restart: unless-stopped
+    container_name: redis-campfire
     hostname: redis
     command: redis-server
     ports:

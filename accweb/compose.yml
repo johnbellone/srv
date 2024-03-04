@@ -7,7 +7,6 @@ services:
   caddy:
     image: caddy:latest
     restart: unless-stopped
-    container_name: caddy
     hostname: caddy
     depends_on:
       - tailscale

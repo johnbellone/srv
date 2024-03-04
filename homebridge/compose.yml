@@ -6,7 +6,6 @@ services:
   caddy:
     image: caddy/caddy:latest
     restart: unless-stopped
-    container_name: caddy
     hostname: caddy
     depends_on:
       - tailscale
@@ -35,7 +34,7 @@ services:
       - net_admin
       - net_raw
       - sys_module
-  homebridge:
+  web:
     image: homebridge/homebridge:latest
     restart: unless-stopped
     environment:
