@@ -1,16 +1,16 @@
 version: "3"
 networks:
-  proxy-subnet:
+  proxy-subnet-homebridge:
     external: false
 services:
   caddy:
-    image: caddy/caddy:latest
+    image: caddy:latest
     restart: unless-stopped
-    hostname: caddy
+    hostname: homebridge
     depends_on:
       - tailscale
     networks:
-      - proxy-subnet
+      - proxy-subnet-homebridge
     ports:
       - "80:80"
       - "443:443"
@@ -20,7 +20,6 @@ services:
   tailscale:
     image: tailscale/tailscale:latest
     restart: unless-stopped
-    hostname: homebridge
     environment:
       - TS_AUTHKEY=${TS_AUTHKEY}
       - TS_EXTRA_ARGS=--advertise-tags=tag:container --accept-routes

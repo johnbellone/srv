@@ -7,7 +7,7 @@ services:
   caddy:
     image: caddy:latest
     restart: unless-stopped
-    hostname: caddy
+    hostname: acc
     depends_on:
       - tailscale
     networks:
@@ -21,7 +21,6 @@ services:
   tailscale:
     image: tailscale/tailscale:latest
     restart: unless-stopped
-    hostname: campfire
     environment:
       - TS_AUTHKEY=${TS_AUTHKEY}
       - TS_EXTRA_ARGS=--advertise-tags=tag:container
@@ -38,7 +37,7 @@ services:
       - net_raw
       - sys_module
   web:
-    image: accweb:latest
+    image: accweb/accweb:latest
     restart: unless-stopped
     ports:
       - "8080:8080"
