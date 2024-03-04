@@ -21,7 +21,6 @@ services:
       - ${PWD}/Caddyfile:/etc/caddy/Caddyfile
   tailscale:
     image: tailscale/tailscale:latest
-    network_mode: host
     restart: unless-stopped
     hostname: campfire
     environment:
@@ -57,7 +56,6 @@ services:
       - TZ=America/New_York
       - FORK_PER_JOB=false
       - INTERVAL=0.1
-      - PORT=9000
       - SKIP_TELEMETRY=true
       - RAILS_ENV=production
       - SECRET_KEY_BASE_DUMMY=1
