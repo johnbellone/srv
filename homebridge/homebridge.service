@@ -1,0 +1,14 @@
+[Unit]
+Description=Docker Compose Homebridge
+StartLimitIntervalSec=60
+
+[Service]
+WorkingDirectory=/home/jbellone/srv/homebridge
+ExecStart=/usr/local/bin/docker-compose up
+ExecStop=/usr/local/bin/docker-compose down
+TimeoutStartSec=0
+Restart=on-failure
+StartLimitBurst=3
+
+[Install]
+WantedBy=default.target

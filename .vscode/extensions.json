@@ -2,6 +2,7 @@
     "recommendations": [
         "esbenp.prettier-vscode",
         "bungcip.better-toml",
-        "rust-lang.rust-analyzer"
+        "hangxingliu.vscode-systemd-support",
+        "zamerick.vscode-caddyfile-syntax"
     ]
 }
