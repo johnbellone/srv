@@ -1,0 +1,55 @@
+version: "3"
+networks:
+  proxy-subnet:
+    external: false
+services:
+  caddy:
+    image: caddy/caddy:latest
+    restart: unless-stopped
+    container_name: caddy
+    hostname: caddy
+    depends_on:
+      - tailscale
+    networks:
+      - proxy-subnet
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ${PWD}/Caddyfile:/etc/caddy/Caddyfile
+  tailscale:
+    image: tailscale/tailscale:latest
+    restart: unless-stopped
+    hostname: homebridge
+    environment:
+      - TS_AUTHKEY=${TS_AUTHHKEY}
+      - TS_EXTRA_ARGS=--advertise-tags=tag:container --accept-routes
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SERVE_CONFIG=/etc/tailscaled/serve.json
+      - TS_ACCEPT_DNS=true
+      - TS_USERSPACE=false
+    volumes:
+      - ${PWD}/serve.json:/etc/tailscaled/serve.json
+      - tailscale-data:/var/lib/tailscale
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - net_admin
+      - net_raw
+      - sys_module
+  homebridge:
+    image: homebridge/homebridge:latest
+    restart: unless-stopped
+    environment:
+      - TZ=America/New_York
+    network_mode: service:tailscale
+    volumes:
+      - homebridge-data:/homebridge
+    depends_on:
+      - caddy
+      - tailscale
+volumes:
+  tailscale-data:
+    driver: local
+  homebridge-data:
+    driver: local
