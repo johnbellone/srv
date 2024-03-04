@@ -23,7 +23,7 @@ services:
     restart: unless-stopped
     hostname: homebridge
     environment:
-      - TS_AUTHKEY=${TS_AUTHHKEY}
+      - TS_AUTHKEY=${TS_AUTHKEY}
       - TS_EXTRA_ARGS=--advertise-tags=tag:container --accept-routes
       - TS_STATE_DIR=/var/lib/tailscale
       - TS_SERVE_CONFIG=/etc/tailscaled/serve.json
