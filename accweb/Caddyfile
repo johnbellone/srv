@@ -1,4 +1,4 @@
-acc.biston-altered.ts.net
+acc.bison-altered.ts.net
 
 reverse_proxy * localhost:9000
 file_server /public/* {
