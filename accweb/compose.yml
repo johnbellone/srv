@@ -37,9 +37,11 @@ services:
   web:
     image: accweb/accweb:latest
     restart: unless-stopped
+    ports:
+      - "9000:9000"
     volumes:
-      - ${PWD}/data/accweb:/accweb
-      - steam-data:/accserver
+      - ${PWD}/data:/accweb
+      - ${HOME}/Steam:/accserver
     environment:
       - ACCWEB_HOST=0.0.0.0:9000
       - ACCWEB_ENABLE_TLS=false
