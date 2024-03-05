@@ -40,12 +40,10 @@ services:
       - TZ=America/New_York
     network_mode: service:tailscale
     volumes:
-      - homebridge-data:/homebridge
+      - ${PWD}/data:/homebridge
     depends_on:
       - caddy
       - tailscale
 volumes:
   tailscale-data:
-    driver: local
-  homebridge-data:
     driver: local
