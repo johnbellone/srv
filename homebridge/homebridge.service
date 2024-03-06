@@ -1,5 +1,5 @@
 [Unit]
-Description=Docker Compose Homebridge
+Description=Homebridge
 StartLimitIntervalSec=60
 
 [Service]

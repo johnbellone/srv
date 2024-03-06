@@ -1,6 +1,0 @@
-homebridge.bison-altered.ts.net
-
-reverse_proxy * localhost:9000
-file_server /public/* {
-    precompressed zstd br gzip
-}
