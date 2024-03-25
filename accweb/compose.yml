@@ -1,17 +1,11 @@
 ---
 version: "3"
-networks:
-  proxy-subnet:
-    external: false
 services:
   caddy:
     image: caddy:latest
     restart: unless-stopped
-    hostname: acc
     depends_on:
       - tailscale
-    networks:
-      - proxy-subnet
     ports:
       - "80:80"
       - "443:443"
@@ -21,6 +15,7 @@ services:
   tailscale:
     image: tailscale/tailscale:latest
     restart: unless-stopped
+    hostname: accweb
     environment:
       - TS_AUTHKEY=${TS_AUTHKEY}
       - TS_EXTRA_ARGS=--advertise-tags=tag:container
@@ -38,22 +33,20 @@ services:
     image: accweb/accweb:latest
     restart: unless-stopped
     ports:
-      - "9000:9000"
+      - "8080:8080"
+      - "9600-9610:9600-9610/tcp"
+      - "9600-9610:9600-9610/udp"
     volumes:
       - ${PWD}/data:/accweb
       - ${HOME}/Steam:/accserver
     environment:
-      - ACCWEB_HOST=0.0.0.0:9000
+      - ACCWEB_HOST=0.0.0.0:8080
       - ACCWEB_ENABLE_TLS=false
       - ACCWEB_ADMIN_PASSWORD=${ACCWEB_ADMIN_PASSWORD}
       - ACCWEB_MOD_PASSWORD=${ACCWEB_MOD_PASSWORD}
       - ACCWEB_RO_PASSWORD=${ACCWEB_RO_PASSWORD}
       - ACCWEB_LOGLEVEL=info
       - ACCWEB_CORS="*"
-    network_mode: service:tailscale
-    depends_on:
-      - tailscale
-      - caddy
 volumes:
   tailscale-data:
     driver: local
